@@ -87,6 +87,7 @@ def copie(T):
     
         
 def solution(T,objets):
+    print("Début de la recherche")
     global solu,histo,H
     solu=creaTab(len(T),len(T[0]))
     histo=[]
@@ -105,6 +106,8 @@ def solution(T,objets):
             LIBRE=chercheLibre(courante)
             
             for k in range(len(LIBRE)):
+                if H==1:
+                    return None
                 if mettretest(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur]):
                     mettre(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur])
                     historique.append([profondeur,LIBRE[k][0],LIBRE[k][1]])
@@ -132,10 +135,14 @@ def lecture(objets):
     R=f.readlines()
     A=[]
     B=[]
-    
     for k in R:
+        if k=="":
+            break
+
         A.append(int(k[:3]))
         B.append(json.loads(k[4:-1]))
+        
+
     obj=[]
     for k in range(len(objets)):
         i=A.index(objets[k])
@@ -145,11 +152,11 @@ def lecture(objets):
 
 
 #CreaTab et Objets: 
-T=creaTab(10,3)  #lignes colonnes
-objets=[31,37,19,9,38,36,39]
+T=creaTab(11,3)  #lignes colonnes
+objets=[40,3,41,5,42,43,11]
 obj=lecture(objets)
 start=time.time()
-print("solu",solution(T,[[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1]],[[0,0],[0,1],[1,1],[2,1],[3,1]],[[0,0],[1,0],[2,0],[3,0],[4,0],[4,-1]],[[0,0],[1,0],[2,0],[3,0],[4,0],[5,0]],[[0,0],[1,0],[1,1],[2,0],[3,0],[4,0],[5,0]]]))
+print("solu",solution(T,obj))
 end=time.time()
 print(end-start)
 
