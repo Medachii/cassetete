@@ -71,7 +71,7 @@ def estComplet(T):
         return False
     else:
         return True
-def chercheLibre(T):
+def chercheLibre(T):            # return all free places
     LIBRE=[]
     for i in range(len(T)):
         for j in range(len(T[0])):
@@ -103,19 +103,19 @@ def solution(T,objets):
         if surpasse(courante) or profondeur==P:
             return None
         else:
-            LIBRE=chercheLibre(courante)
+            LIBRE=chercheLibre(courante)  # we get all the free spaces
             
             for k in range(len(LIBRE)):
                 if H==1:
                     return None
-                if mettretest(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur]):
-                    mettre(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur])
-                    historique.append([profondeur,LIBRE[k][0],LIBRE[k][1]])
+                if mettretest(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur]): # we verify we can put the object on the place
+                    mettre(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur]) #we put it
+                    historique.append([profondeur,LIBRE[k][0],LIBRE[k][1]]) #we add this in the historic
                     #print(histo)
                     
                 
                 
-                    if estComplet(courante):
+                    if estComplet(courante):    # if the game is complete we return the solution
                         print("trouvée")
                         solu=copie(courante)
                         histo=copie(historique)
@@ -125,7 +125,7 @@ def solution(T,objets):
                 
                     retire(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur])
                     del historique[-1]
-                    soluRec(profondeur+1,courante,historique)
+                    
         
     soluRec(0,T,historique)
     return histo
@@ -152,8 +152,9 @@ def lecture(objets):
 
 
 #CreaTab et Objets: 
-T=creaTab(11,3)  #lignes colonnes
-objets=[40,3,41,5,42,43,11]
+T=creaTab(3,9)  #lignes colonnes
+objets=[2,53,14,52,27,54]
+
 obj=lecture(objets)
 start=time.time()
 print("solu",solution(T,obj))
