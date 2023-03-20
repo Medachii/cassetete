@@ -28,9 +28,8 @@ def mettretest(T,i,j,obj):
         I=i+obj[k][0]
         J=j+obj[k][1]
         if I>len(T)-1 or J>len(T[0])-1 or I<0 or J<0:
-            a+=1
-    if a!=0:
-        return False
+            return False
+    
     return True
 
 def retire(T,i,j,obj):
@@ -97,10 +96,11 @@ def solution(T,objets):
     P=len(objets)
     def soluRec(profondeur,courante,historique):
         global solu,histo,H
-        #print(courante)
+        print(historique)
         if H==1:
             return None
         if surpasse(courante) or profondeur==P:
+            print("surpasse")
             return None
         else:
             LIBRE=chercheLibre(courante)  # we get all the free spaces
@@ -125,6 +125,7 @@ def solution(T,objets):
                 
                     retire(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur])
                     del historique[-1]
+                
                     
         
     soluRec(0,T,historique)
@@ -152,10 +153,15 @@ def lecture(objets):
 
 
 #CreaTab et Objets: 
-T=creaTab(3,9)  #lignes colonnes
-objets=[2,53,14,52,27,54]
+T=creaTab(5,6)  #lignes colonnes
+obj=[[[0, 0], [0, 1], [1, 1], [1, 2]],
+     [[0, 0], [-2, 1], [-1, 1], [0, 1], [-1, 2], [0, 2], [1, 2]],
+     [[0, 0], [1, 0], [2, 0], [1, 1], [2, 1], [3, 1]],
+     [[0, 0], [1, 0], [2, 0], [1, 1], [2, 1], [2, 2]],
+     [[0, 0], [0, 1], [1, 1], [2, 1], [0, 2], [0, 3], [1, 3]]
+     ]
 
-obj=lecture(objets)
+#obj=lecture(objets)
 start=time.time()
 print("solu",solution(T,obj))
 end=time.time()
