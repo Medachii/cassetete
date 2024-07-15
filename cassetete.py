@@ -83,53 +83,47 @@ def copie(T):
          for l in range(len(T[0])):
              L[k][l]=T[k][l]
      return L
-    
-        
-def solution(T,objets):
+def generateAllRotations(obj):
+    return [rotateObj(obj, i) for i in range(8)]
+
+def solution(T, objets):
     print("Début de la recherche")
-    global solu,histo,H
-    solu=creaTab(len(T),len(T[0]))
-    histo=[]
-    historique=[]
-    H=0
-    #print("1ere",solu)
-    P=len(objets)
-    def soluRec(profondeur,courante,historique):
-        global solu,histo,H
-        print(historique)
-        if H==1:
+    global solu, histo, H
+    solu = creaTab(len(T), len(T[0]))
+    histo = []
+    historique = []
+    H = 0
+    P = len(objets)
+
+    def soluRec(profondeur, courante, historique):
+        global solu, histo, H
+        if H == 1:
             return None
-        if surpasse(courante) or profondeur==P:
-            print("surpasse")
+        if surpasse(courante) or profondeur == P:
             return None
         else:
-            LIBRE=chercheLibre(courante)  # we get all the free spaces
-            
+            LIBRE = chercheLibre(courante)
             for k in range(len(LIBRE)):
-                if H==1:
+                if H == 1:
                     return None
-                if mettretest(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur]): # we verify we can put the object on the place
-                    mettre(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur]) #we put it
-                    historique.append([profondeur,LIBRE[k][0],LIBRE[k][1]]) #we add this in the historic
-                    #print(histo)
-                    
-                
-                
-                    if estComplet(courante):    # if the game is complete we return the solution
-                        print("trouvée")
-                        solu=copie(courante)
-                        histo=copie(historique)
-                        H=1
-                    
-                    soluRec(profondeur+1,courante,historique)
-                
-                    retire(courante,LIBRE[k][0],LIBRE[k][1],objets[profondeur])
-                    del historique[-1]
-                
-                    
+                for rotation in generateAllRotations(objets[profondeur]):
+                    if mettretest(courante, LIBRE[k][0], LIBRE[k][1], rotation):
+                        mettre(courante, LIBRE[k][0], LIBRE[k][1], rotation)
+                        historique.append([profondeur, LIBRE[k][0], LIBRE[k][1], rotation])
+                        if estComplet(courante):
+                            solu = copie(courante)
+                            histo = copie(historique)
+                            H = 1
+                        soluRec(profondeur + 1, courante, historique)
+                        retire(courante, LIBRE[k][0], LIBRE[k][1], rotation)
+                        del historique[-1]
+
+    soluRec(0, T, historique)
+    return histo 
         
-    soluRec(0,T,historique)
-    return histo
+
+                    
+
         
 def lecture(objets):
     f=open("cataforme.txt","r")
@@ -150,16 +144,38 @@ def lecture(objets):
         obj.append(B[i])
     return obj
 
+def rotateObj(obj,numberOfRotations):
+    #numberOfRotations is a number between 0 and 8
+    #if numberOfRotations is 0, the object is not rotated
+    #if numberOfRotations is 1, the object is rotated 90 degrees
+    #if numberOfRotations is 2, the object is rotated 180 degrees
+    #if numberOfRotations is 3, the object is rotated 270 degrees
+    #if numberOfRotations is 4, the object is rotated 90 degrees and mirrored
+    #if numberOfRotations is 5, the object is rotated 180 degrees and mirrored
+    #if numberOfRotations is 6, the object is rotated 270 degrees and mirrored
+    #if numberOfRotations is 7, the object is mirrored
 
+    for i in range(numberOfRotations):
+        if (numberOfRotations<4):
+            obj = [[-y, x] for x, y in obj]
+        else :
+            obj = [[y, -x] for x, y in obj]
+    minY = min(obj, key=lambda x: x[1])[1]
+    minX = min([x[0] for x in obj if x[1] == minY])
+    obj = [[x - minX, y - minY] for x, y in obj]
+    return obj
+
+
+    
 
 #CreaTab et Objets: 
-T=creaTab(5,6)  #lignes colonnes
-obj=[[[0, 0], [0, 1], [1, 1], [1, 2]],
-     [[0, 0], [-2, 1], [-1, 1], [0, 1], [-1, 2], [0, 2], [1, 2]],
-     [[0, 0], [1, 0], [2, 0], [1, 1], [2, 1], [3, 1]],
-     [[0, 0], [1, 0], [2, 0], [1, 1], [2, 1], [2, 2]],
-     [[0, 0], [0, 1], [1, 1], [2, 1], [0, 2], [0, 3], [1, 3]]
-     ]
+T = creaTab(5, 4)
+obj = [
+[[0, 0], [1, 0], [2, 0], [0, 1], [1, 1]] ,
+[[0, 0], [1, 0], [2, 0], [0, 1], [2, 1]] ,
+[[0, 0], [-1, 1], [0, 1], [1, 1], [-1, 2]],
+[[0, 0], [1, 0], [2, 0], [3, 0], [2, 1]]
+]
 
 #obj=lecture(objets)
 start=time.time()

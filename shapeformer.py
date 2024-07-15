@@ -58,7 +58,7 @@ class PixelGrid:
         for pixel in pixel_list:
             newPixel = [pixel[0] - pixel_list[0][0], pixel[1] - pixel_list[0][1]]
             finalList.append(newPixel)
-        print(finalList)
+        print(finalList,",")
         #mettre la finalList dans le presse-papier
         self.master.clipboard_clear()
         self.master.clipboard_append(str(finalList))
